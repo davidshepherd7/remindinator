@@ -1,7 +1,8 @@
 import { getAllScheduledNotificationsAsync } from "expo-notifications";
 import { DateTime, Duration } from "luxon";
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, Platform } from "react-native";
+import { Card, Paragraph, Title } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { styles } from "./styles";
 import { Reminder } from "./types";
@@ -9,12 +10,12 @@ import { Reminder } from "./types";
 interface Notification {
     identifier: string
     title: string
-    nextTrigger: DateTime | null
+    nextTrigger: DateTime | undefined
     reminderId: string
 }
 
 // Types for this seem to be all wrong
-function guessNextTrigger(trigger: any): DateTime | null {
+function guessNextTrigger(trigger: any): DateTime | undefined {
     console.log(trigger)
     const now = DateTime.now()
     if (trigger.type === 'daily') {
@@ -30,11 +31,15 @@ function guessNextTrigger(trigger: any): DateTime | null {
 
     // TODO other trigger types?
 
-    return null
+    return
 }
 
 
 async function fetchScheduledNotifications(): Promise<Notification[]> {
+    if (Platform.OS === "web") {
+        return []
+    }
+
     const notificationsRaw = await getAllScheduledNotificationsAsync()
     return notificationsRaw.map(n => {
         return {
@@ -69,6 +74,10 @@ export function ListRemindersScreen() {
     )
 }
 
+const cardStyle = {
+    margin: 5,
+}
+
 export function ReminderList({ reminders, notifications }: { reminders: Reminder[], notifications: Notification[] | undefined }) {
     let content;
     if (reminders.length === 0) {
@@ -77,20 +86,25 @@ export function ReminderList({ reminders, notifications }: { reminders: Reminder
     else {
         content = reminders.map((r) => {
             const nextTrigger = notifications?.find(e => e.reminderId === r.id)?.nextTrigger
-            return (< View key={r.id} >
-                <Text>
-                    Remember to {r.title} at {asDateTime(r).toFormat("HH:mm")} every day.
-            </Text>
-                <Text>
-                    Next notification at {nextTrigger?.toRelative()}
-                </Text>
-            </View >)
+            return (
+                <Card key={r.id} style={cardStyle}>
+                    <Card.Title title={r.title} />
+                    <Card.Content>
+                        <Paragraph>
+                            Reminder at {asDateTime(r).toFormat("HH:mm")} every day.
+                        </Paragraph>
+                        <Paragraph>
+                            Next notification at {nextTrigger?.toRelative()}.
+                        </Paragraph>
+                    </Card.Content>
+                </Card >
+            )
         })
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView>
             {content}
-        </View>
+        </ScrollView>
     )
 }

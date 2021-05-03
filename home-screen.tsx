@@ -1,8 +1,9 @@
-import { View, Button } from 'react-native'
+import { View } from 'react-native'
 import { styles } from './styles';
 import * as React from 'react';
 import { clearState } from './store';
 import { useDispatch } from 'react-redux';
+import { Button } from 'react-native-paper';
 
 
 export function HomeScreen({ navigation }: any) {
@@ -14,9 +15,9 @@ export function HomeScreen({ navigation }: any) {
 
     return (
         <View style={styles.container}>
-            <Button title="Remind me to..." onPress={(_) => navigation.navigate('Create')}></Button>
-            <Button title="All reminders" onPress={() => navigation.navigate('List')}></Button>
-            <Button title="Factory reset" onPress={reset} />
+            <Button mode="contained" onPress={() => navigation.navigate('Create')}>Remind me to...</Button>
+            <Button onPress={() => navigation.navigate('List')}>All reminders</Button>
+            <Button onPress={reset}>Factory reset</Button>
         </View>
     );
 }

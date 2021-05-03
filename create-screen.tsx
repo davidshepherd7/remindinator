@@ -3,9 +3,10 @@ import * as React from 'react';
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { addReminder } from "./store"
-import { View, Button, TextInput } from 'react-native'
-import { styles } from "./styles"
+import { ScrollView, View } from 'react-native'
+import { Button, TextInput } from 'react-native-paper';
 
+const marginSize = 10;
 
 
 export function CreateReminderScreen({ navigation }: any) {
@@ -21,11 +22,16 @@ export function CreateReminderScreen({ navigation }: any) {
     }
 
     return (
-        <View style={styles.container}>
-            <TextInput placeholder="Label+" onChangeText={t => setTitle(t)}></TextInput>
-            <TextInput placeholder="Hours" onChangeText={t => setHours(t)}></TextInput>
-            <TextInput placeholder="Minutes" onChangeText={t => setMinutes(t)}></TextInput>
-            <Button title="Create" onPress={onPress} />
-        </View >
+        <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1, height: '100%' }}>
+                <TextInput style={{ margin: marginSize }} placeholder="Take my medicine..." onChangeText={t => setTitle(t)}></TextInput>
+                <View style={{ margin: marginSize, flexDirection: 'row' }}>
+                    <TextInput style={{ flex: 1, marginRight: marginSize }} placeholder="Hours" onChangeText={t => setHours(t)}></TextInput>
+                    <TextInput style={{ flex: 1 }} placeholder="Minutes" onChangeText={t => setMinutes(t)}></TextInput>
+                </View>
+            </ScrollView >
+
+            <Button style={{ height: 60 }} mode="contained" onPress={onPress}>Create</Button>
+        </View>
     )
 }
