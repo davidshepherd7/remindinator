@@ -12,15 +12,17 @@ export function CreateReminderScreen({ navigation }: any) {
     const [minutes, setMinutes] = useState('')
     const [hours, setHours] = useState('')
 
-    const dispatch = useDispatch()
+    const [title, setTitle] = useState('')
 
+    const dispatch = useDispatch()
     const onPress = () => {
-        dispatch(addReminder({ hours: parseInt(hours), minutes: parseInt(minutes) }))
+        dispatch(addReminder({ title, hours: parseInt(hours), minutes: parseInt(minutes) }))
         navigation.navigate("Home")
     }
 
     return (
         <View style={styles.container}>
+            <TextInput placeholder="Label+" onChangeText={t => setTitle(t)}></TextInput>
             <TextInput placeholder="Hours" onChangeText={t => setHours(t)}></TextInput>
             <TextInput placeholder="Minutes" onChangeText={t => setMinutes(t)}></TextInput>
             <Button title="Create" onPress={onPress} />

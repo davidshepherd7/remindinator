@@ -1,5 +1,5 @@
 import { Reminder } from "./types";
-import { addNotificationResponseReceivedListener, DEFAULT_ACTION_IDENTIFIER, NotificationContent, NotificationResponse, scheduleNotificationAsync, setNotificationCategoryAsync } from "expo-notifications";
+import { addNotificationResponseReceivedListener, cancelAllScheduledNotificationsAsync, DEFAULT_ACTION_IDENTIFIER, deleteNotificationCategoryAsync, dismissAllNotificationsAsync, dismissNotificationAsync, NotificationContent, NotificationResponse, scheduleNotificationAsync, setNotificationCategoryAsync } from "expo-notifications";
 import { DateTime, Duration } from "luxon";
 
 const categoryId = "STANDARD_REMINDER";
@@ -27,15 +27,15 @@ export async function configureCategories() {
     await setNotificationCategoryAsync(categoryId, [
         {
             identifier: doneId,
-            buttonTitle: "✓",
+            buttonTitle: "✓ Done!",
         },
         {
             identifier: tenMinutesId,
-            buttonTitle: "10 mins"
+            buttonTitle: "snooze 10 mins"
         },
         {
             identifier: hourId,
-            buttonTitle: "1 hour"
+            buttonTitle: "snooze 1 hour"
         }
     ])
 }
@@ -44,18 +44,30 @@ export function configureListeners() {
     addNotificationResponseReceivedListener(handleNotificationClick)
 }
 
+
+export async function clearNotifyState() {
+    return await Promise.all([
+        dismissAllNotificationsAsync(),
+        cancelAllScheduledNotificationsAsync(),
+        deleteNotificationCategoryAsync(categoryId)
+    ])
+}
+
 export function handleNotificationClick(event: NotificationResponse): void {
     const data = event.notification.request.content.data as NotificationData
     switch (event.actionIdentifier) {
         case DEFAULT_ACTION_IDENTIFIER: //fall-through
         case doneId:
             notificationDone(data.reminderId)
+            dismissNotificationAsync(event.notification.request.identifier)
             break
         case tenMinutesId:
             rescheduleNotification(event.notification.request.content, MINUTES(10))
+            dismissNotificationAsync(event.notification.request.identifier)
             break
         case hourId:
             rescheduleNotification(event.notification.request.content, HOURS(1))
+            dismissNotificationAsync(event.notification.request.identifier)
             break
     }
 }

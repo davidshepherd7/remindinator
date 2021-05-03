@@ -1,14 +1,23 @@
-import { Text, View, Button } from 'react-native'
+import { View, Button } from 'react-native'
 import { styles } from './styles';
 import * as React from 'react';
+import { clearState } from './store';
+import { useDispatch } from 'react-redux';
 
 
 export function HomeScreen({ navigation }: any) {
+
+    const dispatch = useDispatch()
+    const reset = () => {
+        dispatch(clearState({}))
+    }
+
     return (
         <View style={styles.container}>
-            <Text>Remind me to:</Text>
-            <Button title="Take my meds every day" onPress={(_) => navigation.navigate('Create')}></Button>
+            <Button title="Remind me to..." onPress={(_) => navigation.navigate('Create')}></Button>
             <Button title="All reminders" onPress={() => navigation.navigate('List')}></Button>
+            <Button title="Show upcoming reminders" onPress={() => navigation.navigate('Notifications')} />
+            <Button title="Factory reset" onPress={reset} />
         </View>
     );
 }

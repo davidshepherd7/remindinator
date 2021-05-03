@@ -26,7 +26,7 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
     }
     else {
         content = reminders.map((r) => <View key={r.id}><Text>
-            Reminder at {asDateTime(r).toFormat("HH:mm")}
+            Remember to {r.title} at {asDateTime(r).toFormat("HH:mm")} every day.
         </Text></View>)
     }
 
