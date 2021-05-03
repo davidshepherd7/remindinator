@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import React from 'react';
+import * as React from 'react';
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import { ListRemindersScreen } from './list-screen'
 import { persistStore } from 'redux-persist';
 import { CreateReminderScreen } from './create-screen';
 import { HomeScreen } from './home-screen';
+import { configureCategories } from './notifications';
 
 store.subscribe(() => console.log(store.getState().reminders.reminders))
 
@@ -26,6 +27,7 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false,
     }),
 });
+configureCategories()
 
 export default function App() {
     return (

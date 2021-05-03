@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
-import { Reminder } from "./store";
 import { styles } from "./styles";
+import { Reminder } from "./types";
 
 
 export function ListRemindersScreen() {
