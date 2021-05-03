@@ -1,16 +1,16 @@
-import { DateTime } from "luxon";
 import { v4 as uuid } from 'uuid';
 
 export interface Reminder {
-    id: string
-    time: DateTime
+    id: string,
+    time: {
+        hour: number,
+        minute: number
+    }
 }
 
-export function mkReminder(hours: string, minutes: string): Reminder {
+export function mkReminder(hour: number, minute: number): Reminder {
     return {
         id: uuid(),
-        time: DateTime.fromObject({
-            hour: parseInt(hours), minute: parseInt(minutes)
-        })
+        time: { hour, minute },
     }
 }

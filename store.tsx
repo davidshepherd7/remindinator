@@ -4,7 +4,6 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } fro
 import { scheduleNotify } from "./notifications";
 import { mkReminder, Reminder } from "./types";
 
-
 const reminderSlice = createSlice({
     name: 'reminders',
     initialState: {
@@ -20,8 +19,6 @@ const reminderSlice = createSlice({
     }
 })
 export const { addReminder } = reminderSlice.actions
-
-
 
 const reducers = combineReducers({ reminders: reminderSlice.reducer })
 const persistConfig = {

@@ -11,7 +11,7 @@ describe(`ListReminders`, () => {
     });
 
     it('renders some reminders', () => {
-        const reminders = [mkReminder("10", "30"), mkReminder("12", "0")]
+        const reminders = [mkReminder(10, 30), mkReminder(12, 0)]
         const tree = renderer.create(<ReminderList reminders={reminders} />).toJSON();
         expect(tree).toMatchSnapshot();
     });

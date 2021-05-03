@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { addReminder } from "./store"
@@ -13,7 +15,7 @@ export function CreateReminderScreen({ navigation }: any) {
     const dispatch = useDispatch()
 
     const onPress = () => {
-        dispatch(addReminder({ hours, minutes }))
+        dispatch(addReminder({ hours: parseInt(hours), minutes: parseInt(minutes) }))
         navigation.navigate("Home")
     }
 

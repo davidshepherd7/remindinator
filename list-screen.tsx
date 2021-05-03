@@ -1,8 +1,14 @@
+import { DateTime } from "luxon";
 import React from "react";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { styles } from "./styles";
 import { Reminder } from "./types";
+
+
+function asDateTime(reminder: Reminder) {
+    return DateTime.fromObject(reminder.time)
+}
 
 
 export function ListRemindersScreen() {
@@ -20,7 +26,7 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
     }
     else {
         content = reminders.map((r) => <View key={r.id}><Text>
-            Reminder at {r.time.toFormat("HH:mm")}
+            Reminder at {asDateTime(r).toFormat("HH:mm")}
         </Text></View>)
     }
 
