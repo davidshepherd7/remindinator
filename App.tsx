@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as Notifications from 'expo-notifications';
+import { setNotificationHandler } from 'expo-notifications';
 
 import { store } from './store';
 import { ListRemindersScreen } from './list-screen'
@@ -20,7 +20,7 @@ export const persistor = persistStore(store)
 
 const Stack = createStackNavigator();
 
-Notifications.setNotificationHandler({
+setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: false,

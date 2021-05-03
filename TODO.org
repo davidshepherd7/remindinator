@@ -1,0 +1,8 @@
+* Style everything
+* Pretty home screen containing the list of reminders
+* Less awful create reminder screen
+* Auto-snooze - if you don't ack a reminder it re-reminds later
+* Delete reminders
+* Edit reminders
+* Reminder history view
+* Reminder list and history syncing
