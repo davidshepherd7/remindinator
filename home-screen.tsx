@@ -16,7 +16,6 @@ export function HomeScreen({ navigation }: any) {
         <View style={styles.container}>
             <Button title="Remind me to..." onPress={(_) => navigation.navigate('Create')}></Button>
             <Button title="All reminders" onPress={() => navigation.navigate('List')}></Button>
-            <Button title="Show upcoming reminders" onPress={() => navigation.navigate('Notifications')} />
             <Button title="Factory reset" onPress={reset} />
         </View>
     );

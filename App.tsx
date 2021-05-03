@@ -13,7 +13,6 @@ import { persistStore } from 'redux-persist';
 import { CreateReminderScreen } from './create-screen';
 import { HomeScreen } from './home-screen';
 import { configureCategories, configureListeners } from './notifications';
-import { ListNotificationsScreen } from './upcoming-screen';
 
 store.subscribe(() => console.log(store.getState().reminders.reminders))
 
@@ -42,7 +41,6 @@ export default function App() {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Create" component={CreateReminderScreen} />
                         <Stack.Screen name="List" component={ListRemindersScreen} />
-                        <Stack.Screen name="Notifications" component={ListNotificationsScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </PersistGate>

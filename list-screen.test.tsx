@@ -6,13 +6,13 @@ import { mkReminder } from "./types";
 
 describe(`ListReminders`, () => {
     it(`does something nice for no reminders`, () => {
-        const tree = renderer.create(<ReminderList reminders={[]} />).toJSON();
+        const tree = renderer.create(<ReminderList reminders={[]} notifications={undefined} />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 
     it('renders some reminders', () => {
-        const reminders = [mkReminder(10, 30), mkReminder(12, 0)]
-        const tree = renderer.create(<ReminderList reminders={reminders} />).toJSON();
+        const reminders = [mkReminder("Test 1", 10, 30), mkReminder("Test 2", 12, 0)]
+        const tree = renderer.create(<ReminderList reminders={reminders} notifications={undefined} />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 });
