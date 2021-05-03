@@ -114,7 +114,7 @@ export default function App() {
 
 /////////////// Components
 
-function HomeScreen({ navigation }: any) {
+export function HomeScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             <Text>Remind me to:</Text>
@@ -124,7 +124,7 @@ function HomeScreen({ navigation }: any) {
     );
 }
 
-function CreateReminder({ navigation }: any) {
+export function CreateReminder({ navigation }: any) {
     const [minutes, setMinutes] = useState('')
     const [hours, setHours] = useState('')
 
@@ -144,7 +144,7 @@ function CreateReminder({ navigation }: any) {
     )
 }
 
-function ListReminders() {
+export function ListReminders() {
     const reminders = useSelector<any>(state => state.reminders.reminders) as Reminder[]
 
     let content;
