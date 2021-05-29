@@ -110,6 +110,7 @@ export function HomeScreen({ navigation }: any) {
         dispatch(clearState({}))
     }
 
+    // TODO: this doesn't refresh often/quickly enough
     const [notifications, setNotifications] = useState<undefined | Notification[]>(undefined)
 
     useEffect(() => {

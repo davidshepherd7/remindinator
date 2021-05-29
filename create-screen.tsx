@@ -8,7 +8,6 @@ import { Button, TextInput } from 'react-native-paper';
 
 const marginSize = 10;
 
-
 export function CreateReminderScreen({ navigation }: any) {
     const [minutes, setMinutes] = useState('')
     const [hours, setHours] = useState('')
@@ -21,6 +20,8 @@ export function CreateReminderScreen({ navigation }: any) {
         navigation.navigate("Home")
     }
 
+    // TODO: validation
+
     return (
         <View style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1, height: '100%' }}>
@@ -31,7 +32,9 @@ export function CreateReminderScreen({ navigation }: any) {
                 </View>
             </ScrollView >
 
-            <Button style={{ height: 60 }} mode="contained" onPress={onPress}>Create</Button>
-        </View>
+            <Button mode="contained" onPress={onPress}>
+                Create
+            </Button>
+        </View >
     )
 }
