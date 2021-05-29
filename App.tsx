@@ -10,7 +10,6 @@ import { setNotificationHandler } from 'expo-notifications';
 import { Provider as PaperProvider } from 'react-native-paper';
 
 import { store } from './store';
-import { ListRemindersScreen } from './list-screen'
 import { persistStore } from 'redux-persist';
 import { CreateReminderScreen } from './create-screen';
 import { HomeScreen } from './home-screen';
@@ -44,8 +43,7 @@ export default function App() {
                     <NavigationContainer>
                         <Stack.Navigator>
                             <Stack.Screen name="Home" component={HomeScreen} />
-                            <Stack.Screen name="Create" component={CreateReminderScreen} />
-                            <Stack.Screen name="List" component={ListRemindersScreen} />
+                            <Stack.Screen name="New Reminder" component={CreateReminderScreen} />
                         </Stack.Navigator>
                     </NavigationContainer>
                 </PersistGate>

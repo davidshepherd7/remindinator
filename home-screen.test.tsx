@@ -1,5 +1,5 @@
 import React from "react";
-import { ReminderList } from "./list-screen";
+import { ReminderList } from "./home-screen";
 import * as renderer from 'react-test-renderer';
 import { mkReminder } from "./types";
 
