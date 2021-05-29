@@ -7,6 +7,8 @@ import { getAllScheduledNotificationsAsync } from "expo-notifications";
 import { DateTime, Duration } from "luxon";
 import { useSelector } from "react-redux";
 import { Reminder } from "./types";
+import { keyBy, sortBy, chain } from 'lodash';
+
 
 
 interface Notification {
@@ -16,8 +18,10 @@ interface Notification {
     reminderId: string
 }
 
+type ReminderWithNotification = Reminder & { notification: Notification | undefined }
+
 // Types for this seem to be all wrong
-function guessNextTrigger(trigger: any): DateTime | undefined {
+function guessNextTrigger(trigger: any): DateTime {
     console.log(trigger)
     const now = DateTime.now()
     if (trigger.type === 'daily') {
@@ -30,10 +34,9 @@ function guessNextTrigger(trigger: any): DateTime | undefined {
     else if (trigger.type === "date") {
         return DateTime.fromMillis(trigger.value)
     }
-
-    // TODO other trigger types?
-
-    return
+    else {
+        throw Error(`Unhandled trigger type ${trigger.type}`)
+    }
 }
 
 
@@ -54,7 +57,7 @@ async function fetchScheduledNotifications(): Promise<Notification[]> {
 }
 
 
-function asDateTime(reminder: Reminder) {
+function asDateTime(reminder: Reminder): DateTime {
     return DateTime.fromObject(reminder.time)
 }
 
@@ -63,7 +66,7 @@ const cardStyle = {
     margin: 5,
 }
 
-export function ReminderList({ reminders, notifications }: { reminders: Reminder[], notifications: Notification[] | undefined }) {
+export function ReminderList({ reminders }: { reminders: ReminderWithNotification[] }) {
     let content;
     if (reminders.length === 0) {
         content = <Card style={cardStyle}>
@@ -73,22 +76,24 @@ export function ReminderList({ reminders, notifications }: { reminders: Reminder
         </Card >
     }
     else {
-        content = reminders.map((r) => {
-            const nextTrigger = notifications?.find(e => e.reminderId === r.id)?.nextTrigger
-            return (
-                <Card key={r.id} style={cardStyle}>
-                    <Card.Title title={r.title} />
-                    <Card.Content>
-                        <Paragraph>
-                            Reminder at {asDateTime(r).toFormat("HH:mm")} every day.
+        content = chain(reminders)
+            .sortBy(r => r.notification?.nextTrigger)
+            .map((r) => {
+                return (
+                    <Card key={r.id} style={cardStyle}>
+                        <Card.Title title={r.title} />
+                        <Card.Content>
+                            <Paragraph>
+                                Reminder at {asDateTime(r).toFormat("HH:mm")} every day.
                         </Paragraph>
-                        <Paragraph>
-                            Next {nextTrigger?.toRelative()}.
+                            <Paragraph>
+                                Next {r.notification?.nextTrigger?.toRelative() || '...'}.
                         </Paragraph>
-                    </Card.Content>
-                </Card >
-            )
-        })
+                        </Card.Content>
+                    </Card >
+                )
+            })
+            .value()
     }
 
     return (
@@ -116,10 +121,22 @@ export function HomeScreen({ navigation }: any) {
 
     const reminders = useSelector<any>(state => state.reminders.reminders) as Reminder[]
 
-    return (
-        <View style={{ flex: 1 }}>
-            <Button mode="contained" onPress={() => navigation.navigate('New Reminder')}>Remind me to...</Button>
-            <ReminderList reminders={reminders} notifications={notifications}></ReminderList>
-        </View>
-    )
+    if (notifications === undefined) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        )
+    }
+    else {
+        const cache = keyBy(notifications, 'reminderId')
+        const combined = reminders.map((r) => ({ ...r, notification: cache[r.id] }))
+
+        return (
+            < View style={{ flex: 1 }}>
+                <Button mode="contained" onPress={() => navigation.navigate('New Reminder')}>Remind me to...</Button>
+                <ReminderList reminders={combined}></ReminderList>
+            </View >
+        )
+    }
 }
