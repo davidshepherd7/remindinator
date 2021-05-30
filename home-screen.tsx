@@ -1,7 +1,6 @@
-import { View, Text, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
-import { clearState, updateScheduledNotifications } from './store';
-import { useDispatch } from 'react-redux';
+import { View, ScrollView } from "react-native";
+import React from "react";
+import { RootState } from './store';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { DateTime } from "luxon";
 import { useSelector } from "react-redux";

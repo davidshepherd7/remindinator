@@ -8,12 +8,16 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } fro
 import { clearNotifyState, scheduleNotify } from "./notifications";
 import { mkReminder, Reminder, Notification } from "./types";
 
+interface ReminderState {
+    reminders: Reminder[]
+}
 
+const initialState: ReminderState = {
+    reminders: []
+}
 const reminderSlice = createSlice({
     name: 'reminders',
-    initialState: {
-        reminders: [] as Reminder[]
-    },
+    initialState,
     reducers: {
         addReminder: (state, action) => {
             const { title, body, hours, minutes } = action.payload
@@ -23,6 +27,7 @@ const reminderSlice = createSlice({
         },
         updateNotifications: (state, action) => {
             const { notifications } = action.payload
+            // TODO: warn on duplicate reminder ids?
             const cache = keyBy(notifications, 'reminderId')
             return { reminders: state.reminders.map((r) => ({ ...r, notification: cache[r.id] })) }
         },
@@ -34,7 +39,13 @@ const reminderSlice = createSlice({
 })
 export const { addReminder, updateNotifications, clearState } = reminderSlice.actions
 
+
 const reducers = combineReducers({ reminders: reminderSlice.reducer })
+export interface RootState {
+    reminders: ReminderState
+}
+
+
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
@@ -47,8 +58,6 @@ export const store = configureStore({
         }
     })
 })
-
-
 
 
 // Types for this seem to be all wrong
