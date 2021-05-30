@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { v4 as uuid } from 'uuid';
 
 export interface Reminder {
@@ -8,6 +9,7 @@ export interface Reminder {
         hour: number,
         minute: number
     }
+    notification?: Notification
 }
 
 export function mkReminder(title: string, body: string, hour: number, minute: number): Reminder {
@@ -17,4 +19,11 @@ export function mkReminder(title: string, body: string, hour: number, minute: nu
         body: body,
         time: { hour, minute },
     }
+}
+
+export interface Notification {
+    identifier: string
+    title: string
+    nextTrigger: string | undefined
+    reminderId: string
 }
