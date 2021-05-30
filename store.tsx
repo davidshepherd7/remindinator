@@ -11,8 +11,8 @@ const reminderSlice = createSlice({
     },
     reducers: {
         addReminder: (state, action) => {
-            const { title, hours, minutes } = action.payload
-            const r = mkReminder(title, hours, minutes)
+            const { title, body, hours, minutes } = action.payload
+            const r = mkReminder(title, body, hours, minutes)
             scheduleNotify(r)
             return { reminders: [...state.reminders, r] }
         },

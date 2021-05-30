@@ -100,8 +100,8 @@ export async function scheduleNotify(reminder: Reminder): Promise<string> {
 
     return await scheduleNotificationAsync({
         content: {
-            title: "Do the thing",
-            body: 'Please :)',
+            title: reminder.title,
+            body: reminder.body,
             data: data,
             categoryIdentifier: categoryId,
         },

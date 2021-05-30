@@ -1,10 +1,15 @@
 * DONE Style everything
 * DONE Pretty home screen containing the list of reminders
 * DONE Less awful create reminder screen
+* DONE Add real title to notification
+* DONE Add notification body
+* Snooze/done buttons in app
+* Update next notification automatically/more often
 * Auto-snooze - if you don't ack a reminder it re-reminds later
 * Weekly reminders
 * Monthly reminders
 * Custom weekday reminders
 * Delete reminders
+* Undo deletion
 * Edit reminders
 * Reminder history view

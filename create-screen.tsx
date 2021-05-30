@@ -15,7 +15,7 @@ class ValidationError extends Error {
 }
 
 
-function TextField({ onChangeText, placeholder }: { onChangeText: (a: string | null) => void, placeholder: string }) {
+function TextField({ onChangeText, placeholder, required }: { onChangeText: (a: string | null) => void, placeholder: string, required: boolean }) {
 
     const [error, setError] = useState('')
     const [touched, setTouched] = useState(false)
@@ -26,7 +26,7 @@ function TextField({ onChangeText, placeholder }: { onChangeText: (a: string | n
         }
 
         if (touched) {
-            if (x === '') {
+            if (required && x === '') {
                 setError("Required")
                 onChangeText(null)
                 return
@@ -151,6 +151,7 @@ function TimeField({ onChangeTime }: { onChangeTime: (a: Time | null) => void })
 
 export function CreateReminderScreen({ navigation }: any) {
     const [title, setTitle] = useState<null | string>(null)
+    const [body, setBody] = useState<null | string>(null)
     const [time, setTime] = useState<null | Time>(null)
     const dispatch = useDispatch()
 
@@ -163,16 +164,16 @@ export function CreateReminderScreen({ navigation }: any) {
             return
         }
 
-        dispatch(addReminder({ title, hours: time.hours, minutes: time.minutes }))
+        dispatch(addReminder({ title, body: body || "", hours: time.hours, minutes: time.minutes }))
         navigation.navigate("Home")
     }
 
     return (
         <View style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1, height: '100%' }}>
-                <TextField placeholder="Take my medicine..." onChangeText={t => setTitle(t)}></TextField>
-
+                <TextField required={true} placeholder="Take my medicine..." onChangeText={t => setTitle(t)}></TextField>
                 <TimeField onChangeTime={time => setTime(time)}></TimeField>
+                <TextField required={false} placeholder="Details" onChangeText={t => setBody(t)}></TextField>
             </ScrollView >
 
             <Button mode="contained" onPress={onPress} disabled={!isValid()}>

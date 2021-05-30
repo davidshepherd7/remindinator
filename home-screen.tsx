@@ -85,10 +85,18 @@ export function ReminderList({ reminders }: { reminders: ReminderWithNotificatio
                         <Card.Content>
                             <Paragraph>
                                 Reminder at {asDateTime(r).toFormat("HH:mm")} every day.
-                        </Paragraph>
+                            </Paragraph>
                             <Paragraph>
                                 Next {r.notification?.nextTrigger?.toRelative() || '...'}.
-                        </Paragraph>
+                            </Paragraph>
+                            {
+                                r.body && <Paragraph style={{
+                                    borderTopColor: 'gainsboro',
+                                    marginTop: 8,
+                                    paddingTop: 8,
+                                    borderTopWidth: 1,
+                                }}>{r.body}</Paragraph>
+                            }
                         </Card.Content>
                     </Card >
                 )

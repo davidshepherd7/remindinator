@@ -34,7 +34,6 @@ if (Platform.OS !== "web") {
 }
 
 
-
 export default function App() {
     return (
         <Provider store={store}>
