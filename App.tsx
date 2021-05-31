@@ -43,7 +43,7 @@ export default function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <NavigationContainer>
                         <Stack.Navigator>
-                            <Stack.Screen name="Home" component={HomeScreen} />
+                            <Stack.Screen name="Remindinator" component={HomeScreen} />
                             <Stack.Screen name="New Reminder" component={CreateReminderScreen} />
                         </Stack.Navigator>
                     </NavigationContainer>
