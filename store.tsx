@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { combineReducers, configureStore, createSlice, Dispatch, getDefaultMiddleware } from "@reduxjs/toolkit"
+import { combineReducers, configureStore, createSlice, Dispatch, getDefaultMiddleware, PayloadAction } from "@reduxjs/toolkit"
 import { getAllScheduledNotificationsAsync } from "expo-notifications";
 import { keyBy } from "lodash";
 import { Platform } from "react-native";
@@ -20,16 +20,18 @@ const reminderSlice = createSlice({
     name: 'reminders',
     initialState,
     reducers: {
-        addReminder: (state, action) => {
+        addReminder: (state, action: PayloadAction<{ id: string, title: string, body: string, hours: number, minutes: number }>) => {
             const { id, title, body, hours, minutes } = action.payload
-            const r: Reminder = { id, title, body, time: { hour: hours, minute: minutes } }
+            const r: Reminder = {
+                id, title, body, time: { hour: hours, minute: minutes }
+            }
             scheduleNotify(r)
             return {
                 reminders: [...state.reminders, r],
                 lastRemoved: state.lastRemoved,
             }
         },
-        recacheNotificationData: (state, action) => {
+        recacheNotificationData: (state, action: PayloadAction<{ notifications: Notification[] }>) => {
             const { notifications } = action.payload
             // TODO: warn on duplicate reminder ids?
             const cache = keyBy(notifications, 'reminderId')
@@ -38,7 +40,7 @@ const reminderSlice = createSlice({
                 lastRemoved: state.lastRemoved,
             }
         },
-        removeReminder: (state, action) => {
+        removeReminder: (state, action: PayloadAction<{ reminder: Reminder }>) => {
             const { reminder } = action.payload
             // TODO: validate that reminder exists?
             removeNotify(reminder)
@@ -47,7 +49,7 @@ const reminderSlice = createSlice({
                 lastRemoved: reminder,
             }
         },
-        undoRemoveReminder: (state, _action) => {
+        undoRemoveReminder: (state) => {
             if (state.lastRemoved === null)
                 return
             scheduleNotify(state.lastRemoved)
@@ -56,7 +58,7 @@ const reminderSlice = createSlice({
                 lastRemoved: null,
             }
         },
-        clearState: (_state, _action) => {
+        clearState: (_state) => {
             clearNotifyState()
             return { reminders: [], lastRemoved: null }
         },
