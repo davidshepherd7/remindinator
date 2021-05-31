@@ -1,7 +1,6 @@
 import React from "react";
 import { ReminderList } from "./home-screen";
 import * as renderer from 'react-test-renderer';
-import { mkReminder } from "./types";
 
 
 // describe(`ListReminders`, () => {

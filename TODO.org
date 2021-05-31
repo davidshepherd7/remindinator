@@ -7,6 +7,7 @@
 * DONE Fix constantly updating the store?
 * DONE Delete reminders
 * DONE Undo deletion
+* DONE Move uuid generation out of reducer?
 * Auto-snooze - if you don't ack a reminder it re-reminds later
 * Custom weekday reminders
 * Snooze/done buttons in app
@@ -14,6 +15,5 @@
 * Edit reminders
 * Type safe dispatches?
 * bi-weekly/Monthly reminders
-* Move uuid generation out of reducer?
 * Reminder history view
 * Swipe to delete instead of button

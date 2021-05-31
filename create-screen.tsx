@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { v4 as uuid } from 'uuid';
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { addReminder, recacheScheduledNotifications } from "./store"
@@ -163,8 +163,9 @@ export function CreateReminderScreen({ navigation }: any) {
         if (title === null || time === null) {
             return
         }
+        const id = uuid()
 
-        dispatch(addReminder({ title, body: body || "", hours: time.hours, minutes: time.minutes }))
+        dispatch(addReminder({ id, title, body: body || "", hours: time.hours, minutes: time.minutes }))
         recacheScheduledNotifications(dispatch)
         navigation.navigate("Remindinator")
     }

@@ -2,11 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { combineReducers, configureStore, createSlice, Dispatch, getDefaultMiddleware } from "@reduxjs/toolkit"
 import { getAllScheduledNotificationsAsync } from "expo-notifications";
 import { keyBy } from "lodash";
-import { DateTime, Duration } from "luxon";
 import { Platform } from "react-native";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist"
 import { clearNotifyState, guessNextTrigger, removeNotify, scheduleNotify } from "./notifications";
-import { mkReminder, Reminder, Notification } from "./types";
+import { Reminder, Notification } from "./types";
 
 interface ReminderState {
     reminders: Reminder[]
@@ -22,8 +21,8 @@ const reminderSlice = createSlice({
     initialState,
     reducers: {
         addReminder: (state, action) => {
-            const { title, body, hours, minutes } = action.payload
-            const r = mkReminder(title, body, hours, minutes)
+            const { id, title, body, hours, minutes } = action.payload
+            const r: Reminder = { id, title, body, time: { hour: hours, minute: minutes } }
             scheduleNotify(r)
             return {
                 reminders: [...state.reminders, r],
@@ -64,6 +63,7 @@ const reminderSlice = createSlice({
     }
 })
 export const { addReminder, recacheNotificationData, removeReminder, undoRemoveReminder, clearState } = reminderSlice.actions
+
 
 
 const reducers = combineReducers({ reminders: reminderSlice.reducer })
