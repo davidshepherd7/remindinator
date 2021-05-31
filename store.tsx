@@ -5,7 +5,7 @@ import { keyBy } from "lodash";
 import { DateTime, Duration } from "luxon";
 import { Platform } from "react-native";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist"
-import { clearNotifyState, scheduleNotify } from "./notifications";
+import { clearNotifyState, guessNextTrigger, scheduleNotify } from "./notifications";
 import { mkReminder, Reminder, Notification } from "./types";
 
 interface ReminderState {
@@ -25,7 +25,7 @@ const reminderSlice = createSlice({
             scheduleNotify(r)
             return { reminders: [...state.reminders, r] }
         },
-        updateNotifications: (state, action) => {
+        recacheNotificationData: (state, action) => {
             const { notifications } = action.payload
             // TODO: warn on duplicate reminder ids?
             const cache = keyBy(notifications, 'reminderId')
@@ -37,7 +37,7 @@ const reminderSlice = createSlice({
         },
     }
 })
-export const { addReminder, updateNotifications, clearState } = reminderSlice.actions
+export const { addReminder, recacheNotificationData, clearState } = reminderSlice.actions
 
 
 const reducers = combineReducers({ reminders: reminderSlice.reducer })
@@ -59,26 +59,6 @@ export const store = configureStore({
     })
 })
 
-
-// Types for this seem to be all wrong
-function guessNextTrigger(trigger: any): DateTime {
-    const now = DateTime.now()
-    if (trigger.type === 'daily') {
-        const { hour, minute } = trigger
-        const datePart = (now.hour > hour || (now.hour === hour && now.minute >= minute)) ?
-            now.plus(Duration.fromObject({ day: 1 })) :
-            now;
-        return datePart.set({ hour: hour, minute: minute, second: 0, millisecond: 0 })
-    }
-    else if (trigger.type === "date") {
-        return DateTime.fromMillis(trigger.value)
-    }
-    else {
-        throw Error(`Unhandled trigger type ${trigger.type}`)
-    }
-}
-
-
 async function fetchScheduledNotifications(): Promise<Notification[]> {
     if (Platform.OS === "web") {
         return []
@@ -95,7 +75,7 @@ async function fetchScheduledNotifications(): Promise<Notification[]> {
     })
 }
 
-export async function updateScheduledNotifications(dispatch: Dispatch<any>): Promise<void> {
+export async function recacheScheduledNotifications(dispatch: Dispatch<any>): Promise<void> {
     const notifications = await fetchScheduledNotifications()
-    dispatch(updateNotifications({ notifications }))
+    dispatch(recacheNotificationData({ notifications }))
 }

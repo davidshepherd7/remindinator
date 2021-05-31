@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { addReminder, updateScheduledNotifications } from "./store"
+import { addReminder, recacheScheduledNotifications } from "./store"
 import { ScrollView, View } from 'react-native'
 import { Button, HelperText, TextInput } from 'react-native-paper';
 
@@ -165,7 +165,7 @@ export function CreateReminderScreen({ navigation }: any) {
         }
 
         dispatch(addReminder({ title, body: body || "", hours: time.hours, minutes: time.minutes }))
-        updateScheduledNotifications(dispatch)
+        recacheScheduledNotifications(dispatch)
         navigation.navigate("Home")
     }
 

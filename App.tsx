@@ -9,11 +9,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { setNotificationHandler } from 'expo-notifications';
 import { Provider as PaperProvider } from 'react-native-paper';
 
-import { store, updateScheduledNotifications } from './store';
+import { store, recacheScheduledNotifications } from './store';
 import { persistStore } from 'redux-persist';
 import { CreateReminderScreen } from './create-screen';
 import { HomeScreen } from './home-screen';
-import { configureCategories, configureListeners } from './notifications';
+import { configureCategories, configureListeners } from './notification-ui';
 
 store.subscribe(() => console.log("updated"))
 
@@ -34,7 +34,7 @@ if (Platform.OS !== "web") {
 }
 
 // Regularly query the notification state
-setInterval(() => updateScheduledNotifications(store.dispatch), 30000)
+setInterval(() => recacheScheduledNotifications(store.dispatch), 30000)
 
 export default function App() {
     return (

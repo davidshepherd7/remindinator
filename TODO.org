@@ -8,12 +8,11 @@
 * Auto-snooze - if you don't ack a reminder it re-reminds later
 * Custom weekday reminders
 * Snooze/done buttons in app
-* Weekly reminders
-* Monthly reminders
 * Delete reminders
 * Undo deletion
-* Edit reminders
-* Reminder history view
 * More accurate "next in" for time periods between 1 and 2 hours
-* Move uuid generation out of reducer?
+* Edit reminders
 * Type safe dispatches?
+* bi-weekly/Monthly reminders
+* Move uuid generation out of reducer?
+* Reminder history view

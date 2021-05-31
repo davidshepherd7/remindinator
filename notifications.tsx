@@ -1,49 +1,35 @@
 import { Reminder } from "./types";
-import { addNotificationResponseReceivedListener, cancelAllScheduledNotificationsAsync, DEFAULT_ACTION_IDENTIFIER, deleteNotificationCategoryAsync, dismissAllNotificationsAsync, dismissNotificationAsync, NotificationContent, NotificationResponse, scheduleNotificationAsync, setNotificationCategoryAsync } from "expo-notifications";
+import { cancelAllScheduledNotificationsAsync, deleteNotificationCategoryAsync, dismissAllNotificationsAsync, getNextTriggerDateAsync, NotificationContent, scheduleNotificationAsync } from "expo-notifications";
 import { DateTime, Duration } from "luxon";
+import { range } from "lodash";
 
-const categoryId = "STANDARD_REMINDER";
 
-const doneId = "DONE"
-const tenMinutesId = "10_MINUTES"
-const hourId = "1_HOUR"
+export const categoryId = "STANDARD_REMINDER";
 
 interface XNotificationData {
     reminderId: string;
 }
-type NotificationData = XNotificationData & {
+export type NotificationData = XNotificationData & {
     [key: string]: any
 }
 
-function MINUTES(m: number): Duration {
-    return Duration.fromObject({ minutes: m })
+// Types for this seem to be all wrong
+export function guessNextTrigger(trigger: any): DateTime {
+    const now = DateTime.now()
+    if (trigger.type === 'daily') {
+        const { hour, minute } = trigger
+        const datePart = (now.hour > hour || (now.hour === hour && now.minute >= minute)) ?
+            now.plus(Duration.fromObject({ day: 1 })) :
+            now;
+        return datePart.set({ hour: hour, minute: minute, second: 0, millisecond: 0 })
+    }
+    else if (trigger.type === "date") {
+        return DateTime.fromMillis(trigger.value)
+    }
+    else {
+        throw Error(`Unhandled trigger type ${trigger.type}`)
+    }
 }
-
-function HOURS(m: number): Duration {
-    return Duration.fromObject({ hours: m })
-}
-
-export async function configureCategories() {
-    await setNotificationCategoryAsync(categoryId, [
-        {
-            identifier: doneId,
-            buttonTitle: "✓ Done!",
-        },
-        {
-            identifier: tenMinutesId,
-            buttonTitle: "snooze 10 mins"
-        },
-        {
-            identifier: hourId,
-            buttonTitle: "snooze 1 hour"
-        }
-    ])
-}
-
-export function configureListeners() {
-    addNotificationResponseReceivedListener(handleNotificationClick)
-}
-
 
 export async function clearNotifyState() {
     return await Promise.all([
@@ -53,29 +39,6 @@ export async function clearNotifyState() {
     ])
 }
 
-export function handleNotificationClick(event: NotificationResponse): void {
-    const data = event.notification.request.content.data as NotificationData
-    switch (event.actionIdentifier) {
-        case DEFAULT_ACTION_IDENTIFIER: //fall-through
-        case doneId:
-            notificationDone(data.reminderId)
-            dismissNotificationAsync(event.notification.request.identifier)
-            break
-        case tenMinutesId:
-            rescheduleNotification(event.notification.request.content, MINUTES(10))
-            dismissNotificationAsync(event.notification.request.identifier)
-            break
-        case hourId:
-            rescheduleNotification(event.notification.request.content, HOURS(1))
-            dismissNotificationAsync(event.notification.request.identifier)
-            break
-    }
-}
-
-
-export async function notificationDone(reminderId: string) {
-    console.log(`Reminder ${reminderId} is done`)
-}
 
 export async function rescheduleNotification(content: NotificationContent, delay: Duration) {
     const when = DateTime.now().plus(delay)
