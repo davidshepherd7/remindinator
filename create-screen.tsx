@@ -68,11 +68,11 @@ function validateWholeNumber(x: string, min?: number, max?: number): number {
     }
 
     if (min !== undefined && xNum < min) {
-        throw new ValidationError("Must be greater than min")
+        throw new ValidationError(`Must be greater than ${min}`)
     }
 
     if (max !== undefined && xNum >= max) {
-        throw new ValidationError("Must be less than max")
+        throw new ValidationError(`Must be less than ${max}`)
     }
 
     return xNum
