@@ -5,10 +5,10 @@
 * DONE Add notification body
 * DONE Update next notification automatically/more often
 * DONE Fix constantly updating the store?
+* DONE Delete reminders
 * Auto-snooze - if you don't ack a reminder it re-reminds later
 * Custom weekday reminders
 * Snooze/done buttons in app
-* Delete reminders
 * Undo deletion
 * More accurate "next in" for time periods between 1 and 2 hours
 * Edit reminders
@@ -16,3 +16,4 @@
 * bi-weekly/Monthly reminders
 * Move uuid generation out of reducer?
 * Reminder history view
+* Swipe to delete instead of button

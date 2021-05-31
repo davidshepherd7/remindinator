@@ -1,9 +1,9 @@
 import { View, ScrollView } from "react-native";
 import React from "react";
-import { RootState } from './store';
+import { removeReminder, RootState } from './store';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { DateTime } from "luxon";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Reminder } from "./types";
 import { chain } from 'lodash';
 
@@ -16,6 +16,10 @@ const cardStyle = {
 }
 
 export function ReminderList({ reminders }: { reminders: Reminder[] }) {
+    const dispatch = useDispatch()
+
+
+
     let content;
     if (reminders.length === 0) {
         content = <Card style={cardStyle}>
@@ -52,6 +56,13 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
                                     }}>{r.body}</Paragraph> :
                                     undefined
                             }
+                            <Card.Actions>
+                                <Button
+                                    icon="trash-can"
+                                    mode="outlined"
+                                    color="red"
+                                    onPress={() => dispatch(removeReminder({ reminder: r }))}> Delete </Button>
+                            </Card.Actions>
                         </Card.Content>
                     </Card >
                 )

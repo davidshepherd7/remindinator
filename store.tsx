@@ -5,15 +5,17 @@ import { keyBy } from "lodash";
 import { DateTime, Duration } from "luxon";
 import { Platform } from "react-native";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist"
-import { clearNotifyState, guessNextTrigger, scheduleNotify } from "./notifications";
+import { clearNotifyState, guessNextTrigger, removeNotify, scheduleNotify } from "./notifications";
 import { mkReminder, Reminder, Notification } from "./types";
 
 interface ReminderState {
     reminders: Reminder[]
+    lastRemoved: Reminder | null
 }
 
 const initialState: ReminderState = {
-    reminders: []
+    reminders: [],
+    lastRemoved: null,
 }
 const reminderSlice = createSlice({
     name: 'reminders',
@@ -23,21 +25,36 @@ const reminderSlice = createSlice({
             const { title, body, hours, minutes } = action.payload
             const r = mkReminder(title, body, hours, minutes)
             scheduleNotify(r)
-            return { reminders: [...state.reminders, r] }
+            return {
+                reminders: [...state.reminders, r],
+                lastRemoved: state.lastRemoved,
+            }
         },
         recacheNotificationData: (state, action) => {
             const { notifications } = action.payload
             // TODO: warn on duplicate reminder ids?
             const cache = keyBy(notifications, 'reminderId')
-            return { reminders: state.reminders.map((r) => ({ ...r, notification: cache[r.id] })) }
+            return {
+                reminders: state.reminders.map((r) => ({ ...r, notification: cache[r.id] })),
+                lastRemoved: state.lastRemoved,
+            }
+        },
+        removeReminder: (state, action) => {
+            const { reminder } = action.payload
+            // TODO: validate that reminder exists?
+            removeNotify(reminder)
+            return {
+                reminders: state.reminders.filter(r => r.id !== reminder.id),
+                lastRemoved: reminder,
+            }
         },
         clearState: (_state, _action) => {
             clearNotifyState()
-            return { reminders: [] }
+            return { reminders: [], lastRemoved: null }
         },
     }
 })
-export const { addReminder, recacheNotificationData, clearState } = reminderSlice.actions
+export const { addReminder, recacheNotificationData, removeReminder, clearState } = reminderSlice.actions
 
 
 const reducers = combineReducers({ reminders: reminderSlice.reducer })

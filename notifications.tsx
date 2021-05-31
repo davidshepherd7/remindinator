@@ -1,5 +1,5 @@
 import { Reminder } from "./types";
-import { cancelAllScheduledNotificationsAsync, deleteNotificationCategoryAsync, dismissAllNotificationsAsync, getNextTriggerDateAsync, NotificationContent, scheduleNotificationAsync } from "expo-notifications";
+import { cancelAllScheduledNotificationsAsync, cancelScheduledNotificationAsync, deleteNotificationCategoryAsync, dismissAllNotificationsAsync, getNextTriggerDateAsync, NotificationContent, scheduleNotificationAsync } from "expo-notifications";
 import { DateTime, Duration } from "luxon";
 import { range } from "lodash";
 
@@ -74,4 +74,11 @@ export async function scheduleNotify(reminder: Reminder): Promise<string> {
             repeats: true
         },
     });
+}
+
+export async function removeNotify(reminder: Reminder): Promise<void> {
+    const id = reminder.notification?.identifier
+    if (id) {
+        await cancelScheduledNotificationAsync(id)
+    }
 }
