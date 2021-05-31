@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { setNotificationHandler } from 'expo-notifications';
 import { Provider as PaperProvider } from 'react-native-paper';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { store, recacheScheduledNotifications } from './store';
 import { persistStore } from 'redux-persist';
@@ -40,14 +41,16 @@ export default function App() {
     return (
         <Provider store={store}>
             <PaperProvider>
-                <PersistGate loading={null} persistor={persistor}>
-                    <NavigationContainer>
-                        <Stack.Navigator>
-                            <Stack.Screen name="Remindinator" component={HomeScreen} />
-                            <Stack.Screen name="New Reminder" component={CreateReminderScreen} />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                </PersistGate>
+                <RootSiblingParent>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <NavigationContainer>
+                            <Stack.Navigator>
+                                <Stack.Screen name="Remindinator" component={HomeScreen} />
+                                <Stack.Screen name="New Reminder" component={CreateReminderScreen} />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </PersistGate>
+                </RootSiblingParent>
             </PaperProvider>
         </Provider>
     );

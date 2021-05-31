@@ -48,13 +48,22 @@ const reminderSlice = createSlice({
                 lastRemoved: reminder,
             }
         },
+        undoRemoveReminder: (state, _action) => {
+            if (state.lastRemoved === null)
+                return
+            scheduleNotify(state.lastRemoved)
+            return {
+                reminders: [...state.reminders, state.lastRemoved],
+                lastRemoved: null,
+            }
+        },
         clearState: (_state, _action) => {
             clearNotifyState()
             return { reminders: [], lastRemoved: null }
         },
     }
 })
-export const { addReminder, recacheNotificationData, removeReminder, clearState } = reminderSlice.actions
+export const { addReminder, recacheNotificationData, removeReminder, undoRemoveReminder, clearState } = reminderSlice.actions
 
 
 const reducers = combineReducers({ reminders: reminderSlice.reducer })

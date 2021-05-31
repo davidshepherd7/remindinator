@@ -6,10 +6,10 @@
 * DONE Update next notification automatically/more often
 * DONE Fix constantly updating the store?
 * DONE Delete reminders
+* DONE Undo deletion
 * Auto-snooze - if you don't ack a reminder it re-reminds later
 * Custom weekday reminders
 * Snooze/done buttons in app
-* Undo deletion
 * More accurate "next in" for time periods between 1 and 2 hours
 * Edit reminders
 * Type safe dispatches?

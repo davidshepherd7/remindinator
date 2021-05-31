@@ -166,7 +166,7 @@ export function CreateReminderScreen({ navigation }: any) {
 
         dispatch(addReminder({ title, body: body || "", hours: time.hours, minutes: time.minutes }))
         recacheScheduledNotifications(dispatch)
-        navigation.navigate("Home")
+        navigation.navigate("Remindinator")
     }
 
     return (
